@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P2P Chat Receiver</title>
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a90e2;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        #chatBox {
+            height: 60vh;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        #messageInput {
+            width: 70%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            margin-right: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            flex-grow: 1;
+        }
+
+        #sendButton {
+            padding: 10px 20px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        #sendButton:hover {
+            background-color: #357ABD;
+        }
+
+        #connectionStatus {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #777;
+            font-size: 1rem;
+        }
+
+        .message-container {
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            max-width: 75%;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .sender {
+            background-color: #dcf8c6;
+            text-align: right;
+            margin-left: auto;
+        }
+
+        .receiver {
+            background-color: #fff;
+            text-align: left;
+            margin-right: auto;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: #999;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            #chatBox {
+                height: 50vh;
+                padding: 10px;
+                border-radius: 8px;
+            }
+
+            #messageInput {
+                width: 60%;
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            #sendButton {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+
+            .message-container {
+                padding: 8px 12px;
+                font-size: 13px;
+                max-width: 80%;
+                border-radius: 8px;
+            }
+        }
+
+        #inputContainer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Connectify</h1>
+    <br>
+    <h3>Receiver</h3>
+
+    <div id="pairIdContainer">
+        <p>Your Peer ID: <span id="peerId">Not Generated</span></p>
+        <button id="generateButton">Generate 6-Digit Peer ID</button>
+    </div>
+
+    <p id="connectionStatus">Waiting for sender to connect...</p>
+    <div id="chatBox"></div>
+
+    <div id="inputContainer">
+        <input type="text" id="messageInput" placeholder="Type a message...">
+        <button id="sendButton">Send</button>
+    </div>
+
+    <script>
+        let peer;
+        let conn;
+
+        // Generate a 6-digit peer ID
+        function generatePeerId() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        // Set up the peer and connection logic
+        document.getElementById('generateButton').addEventListener('click', () => {
+            const peerId = generatePeerId();
+            document.getElementById('peerId').textContent = peerId;
+
+            peer = new Peer(peerId);
+
+            peer.on('open', (id) => {
+                console.log('Peer ID: ' + id);
+            });
+
+            peer.on('connection', (connection) => {
+                conn = connection;
+                document.getElementById('connectionStatus').textContent = 'Connected to sender';
+
+                conn.on('data', (data) => {
+                    appendMessage('Sender', data);
+                });
+            });
+        });
+
+        // Sending messages
+        document.getElementById('sendButton').addEventListener('click', sendMessage);
+        document.getElementById('messageInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+            if (message && conn) {
+                conn.send(message);
+                appendMessage('You', message);
+                messageInput.value = '';
+            }
+        }
+
+        // Append messages to the chatbox
+        function appendMessage(sender, message) {
+            const chatBox = document.getElementById('chatBox');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message-container');
+
+            const messageText = document.createElement('p');
+            messageText.textContent = `${sender}: ${message}`;
+            messageElement.appendChild(messageText);
+
+            const timestamp = document.createElement('div');
+            timestamp.classList.add('timestamp');
+            timestamp.textContent = getCurrentTime();
+            messageElement.appendChild(timestamp);
+
+            if (sender === 'You') {
+                messageElement.classList.add('sender');
+            } else {
+                messageElement.classList.add('receiver');
+            }
+
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Remove message after 2 minutes
+            setTimeout(() => {
+                messageElement.remove();
+            }, 120000); // 2 minutes in milliseconds
+        }
+
+        // Get current time
+        function getCurrentTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const formattedHours = hours % 12 || 12;
+            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+            return `${formattedHours}:${formattedMinutes} ${ampm}`;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connectify Branding</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #d3d3d3;
+        }
+
+        .branding-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            position: relative;
+            background-color: #d3d3d3;
+        }
+
+        .branding-section::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background-color: #f0f0f0;
+            border-top-left-radius: 50% 20%;
+            border-top-right-radius: 50% 20%;
+            z-index: -1;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        hr {
+            width: 50px;
+            border: 1px solid #000;
+            margin: 20px 0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            font-size: 1rem;
+            border: 2px solid #000;
+            border-radius: 50px;
+            background-color: transparent;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background-color: #1e40af;
+            border-color: #1e40af;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #112a70;
+            border-color: #112a70;
+        }
+
+        .admin-login-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ff5722; /* Orange color */
+            border-color: #ff5722;
+            color: #fff;
+        }
+
+        .admin-login-btn:hover {
+            background-color: #e64a19; /* Darker orange on hover */
+            border-color: #e64a19;
+        }
+    </style>
+</head>
+<body>
+    <div class="branding-section">
+        <h1>Connectify</h1>
+        <hr>
+        <p><b>"Every Chat, A New Story"</b></p>
+
+        <p>"Stay connected with friends, no matter where you are. <br>Start conversations with just a tap."</p>
+        <p>"Powered by Official@Connectify"</p>
+        <div class="button-group">
+            <a href="{% url 'chat' %}" class="btn" aria-label="Start Chat">start chat</a>
+            <a href="{% url 'help' %}" class="btn btn-primary" aria-label="Help">help</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,175 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover A New Era Of Cool</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            padding-top: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100vh;
+            background-color: white;
+            font-family: 'Arial', sans-serif;
+            box-sizing: border-box;
+        }
+
+        /* Navigation Bar */
+        nav {
+            width: 100%;
+            background-color: #4a90e2;
+            padding: 10px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-sizing: border-box;
+        }
+
+        /* Brand Container */
+        .brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 50px;
+            width: auto;
+        }
+
+        .brand-name {
+            font-size: 28px;
+            color: white;
+            font-weight: bold;
+            font-family: 'Sora', sans-serif;
+            margin-left: 20px;
+        }
+
+        .brand-tagline {
+            font-size: 14px;
+            color: white;
+            font-family: 'Sora', sans-serif;
+        }
+
+        h2 {
+            font-size: 3em;
+            font-weight: bold;
+            color: black;
+        }
+
+        #typewriter {
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        .text-container {
+            max-width: 50%;
+            padding-left: 120px;
+        }
+
+        .explore-link,
+        .new-button {
+            color: #000;
+            text-decoration: none;
+            font-size: 1.2em;
+            margin-top: 20px;
+            display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid black;
+            border-radius: 30px;
+            margin-right: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .explore-link:hover,
+        .new-button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .video-container {
+            max-width: 50%;
+            display: flex;
+            justify-content: center;
+            margin-left: 300px;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: auto;
+            border-radius: 0px;
+        }
+
+        .typewriter-color {
+            color: #ff0000;
+        }
+
+        /* Styling for typewriter text */
+        .typewriter span {
+            font-size: 48px;
+            font-weight: 700;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <nav>
+        <div class="brand">
+            <img src="{% static 'videos/logo2.png' %}" alt="Connectify Logo" class="logo">
+            
+        </div>
+    </nav>
+
+    <div class="text-container">
+        <h2 style="font-family: 'Sora', sans-serif;">Transforming the Way You Connect</h2>
+        <div id="typewriter" style="font-size: 48px;"></div>
+        <a href="{% url 'choose' %}" class="explore-link">Start Chat</a> <!-- Updated link -->
+        <a href="{% url 'learn_more' %}" class="new-button">Contact Us</a>
+    </div>
+
+    <div>
+        <div class="video-container">
+            <video id="myVideo" src="{% static 'videos/Home Video.mp4' %}" autoplay loop muted></video>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
+    <script>
+        var app = document.getElementById('typewriter');
+
+        var typewriter = new Typewriter(app, {
+            loop: true,
+            delay: 75,
+        });
+
+        typewriter
+            .pauseFor(1000)
+            .deleteAll()
+            .typeString('<span style="color: blue;">Instant Messaging, Anytime, Anywhere!</span>')
+            .pauseFor(1000)
+            .deleteAll()
+            .pauseFor(1000)
+            .typeString('<span style="color: #e86d11;">Private Conversations</span>')
+            .pauseFor(1000)
+            .deleteAll()
+            .typeString('<span class="typewriter-color">Instant Connect</span>')
+            .pauseFor(1000)
+            .deleteAll()
+            .start();
+
+        // Reduce the video speed by 2x
+        var video = document.getElementById('myVideo');
+        video.playbackRate = 0.5; // Slow down video by 2x
+    </script>
+
+</body>
+
+</html>
